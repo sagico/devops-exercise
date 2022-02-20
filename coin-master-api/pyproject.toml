@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "coin-master-api"
+version = "0.1.0"
+description = "Check currencies exchange rate"
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+aiohttp = {extras = ["speedups"], version = "^3.8.1"}
+pydantic = {extras = ["dotenv"], version = "^1.9.0"}
+fastapi = "^0.74.0"
+uvicorn = "^0.17.5"
+
+[tool.poetry.dev-dependencies]
+black = "^22.1.0"
+pylint = "^2.12.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
