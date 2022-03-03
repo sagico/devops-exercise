@@ -10,6 +10,7 @@ aiohttp = {extras = ["speedups"], version = "^3.8.1"}
 pydantic = {extras = ["dotenv"], version = "^1.9.0"}
 fastapi = "^0.74.0"
 uvicorn = "^0.17.5"
+loguru = "^0.6.0"
 
 [tool.poetry.dev-dependencies]
 black = "^22.1.0"
