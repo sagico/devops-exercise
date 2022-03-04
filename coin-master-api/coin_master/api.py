@@ -1,5 +1,3 @@
-import logging
-
 from fastapi import FastAPI
 from structlog.stdlib import get_logger
 
@@ -28,5 +26,5 @@ def create_app() -> FastAPI:
     app.on_event("shutdown")(shutdown_event)
     app.middleware("http")(add_log_context)
     app.include_router(router=router)
-    
+
     return app
