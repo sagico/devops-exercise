@@ -39,7 +39,7 @@ This application provides an API to retrieve the exchange rate between two curre
 For this purpose it uses `exchangerate-api.com`.
 
 The application is written in Python and can be deployed with docker.  
-You can find the application source code at `coint-master-api` directory in this repository.  
+You can find the application source code at `coin-master-api` directory in this repository.  
 In order to properly deploy this app you will need an API token for `exchangerate-api.com` -
 generate a free one on
 [https://app.exchangerate-api.com/sign-in](https://app.exchangerate-api.com/sign-in).
@@ -52,7 +52,7 @@ on a local/remote Kubernetes cluster.
 
 ### Step 1 - Build & Publish a docker image
 
-Go to the `coint-master-api`, build a Docker image and deploy it to Docker Hub.
+Go to the `coin-master-api`, build a Docker image and deploy it to Docker Hub.
 
 ### Step 2 - Deploy a Kubernetes Cluster
 
