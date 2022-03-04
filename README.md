@@ -24,7 +24,7 @@ You will have to finish the first stage to be able to continue to the second one
 (Github/Gitlab/Whatever you're comfortable with)
 2. Every stage solution should exist on a separate matching git tag  
 For example - Stage 0 solution should exist on `stage-0` git tag
-3. There is no need to work with several branches, you can use master
+3. It is not necessary to work with several branches, you can use master
 4. Use meaningful git commits
 5. Write minimal documentation for what you write - it should be clear enough
 for someone who didn't read your code/automation to use and deploy it
