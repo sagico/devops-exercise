@@ -1,10 +1,15 @@
 from http.client import INTERNAL_SERVER_ERROR, NOT_FOUND, SERVICE_UNAVAILABLE
 from fastapi import APIRouter, Depends, HTTPException
-from loguru import logger
+from structlog import get_logger
+from structlog.threadlocal import bound_threadlocal
 from pydantic import BaseModel
 
 from .coin_exchange import CoinExchange, CoinExchangeError, CurrencyNotFound
 from .dependencies import coin_exchange
+
+
+logger = get_logger()
+
 
 class ExchangeRateResponse(BaseModel):
     rate: float
@@ -33,14 +38,15 @@ async def get_exchange_rate(
     to_currency: str,
     exchange: CoinExchange = Depends(coin_exchange),
 ):
-    try:
-        rate = await exchange.check_rate(from_currency, to_currency)
-        return ExchangeRateResponse(rate=rate)
-    except CurrencyNotFound:
-        raise HTTPException(NOT_FOUND)
-    except CoinExchangeError:
-        logger.exception("failed to get rate from exchange")
-        raise HTTPException(SERVICE_UNAVAILABLE)
+    with bound_threadlocal(from_currency=from_currency, to_currency=to_currency):
+        try:
+            rate = await exchange.check_rate(from_currency, to_currency)
+            return ExchangeRateResponse(rate=rate)
+        except CurrencyNotFound:
+            raise HTTPException(NOT_FOUND)
+        except CoinExchangeError:
+            logger.exception("Failed to get rate from exchange")
+            raise HTTPException(SERVICE_UNAVAILABLE)
 
 
 @router.get("/health", response_model=ExchangeHealthResponse)
@@ -53,5 +59,5 @@ async def check_exchange_health(
     except CurrencyNotFound:
         raise HTTPException(NOT_FOUND)
     except CoinExchangeError:
-        logger.exception("failed to get rate from exchange")
+        logger.exception("Health check failed for coin exchange")
         raise HTTPException(SERVICE_UNAVAILABLE)

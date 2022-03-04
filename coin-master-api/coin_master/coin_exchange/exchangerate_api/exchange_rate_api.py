@@ -5,11 +5,14 @@ from contextlib import asynccontextmanager
 from http.client import BAD_REQUEST, FORBIDDEN, NOT_FOUND
 from typing import Iterator
 
-from loguru import logger
+from structlog import get_logger
 
 from .exceptions import ExceededAPIQuota, InvalidAPIKey, UnexpectedResponse
 from ..coin_exchange import CoinExchange
 from ...coin_exchange import CurrencyNotFound
+
+
+logger = get_logger()
 
 
 def catch_unexpected_reponse(method):
@@ -34,8 +37,8 @@ class ExchangeRateAPI(CoinExchange):
 
     @asynccontextmanager
     async def _get(self, url: str) -> Iterator[aiohttp.ClientResponse]:
-        async with self.session.get(f"/v6/{self.api_key}/{url}") as response:
-            logger.debug(f"ExchangeRate API call url={url} status={response.status}")
+        async with self.session.get(f"/v6/{self.api_key}{url}") as response:
+            logger.debug("Calling ExchangeRate API", exchange_rate_api_path=url, status=response.status)
             if response.status == FORBIDDEN:
                 raise InvalidAPIKey()
 
@@ -43,7 +46,7 @@ class ExchangeRateAPI(CoinExchange):
 
     @catch_unexpected_reponse
     async def check_rate(self, from_currency: str, to_currency: str) -> float:
-        async with self._get(f"pair/{from_currency}/{to_currency}") as response:
+        async with self._get(f"/pair/{from_currency}/{to_currency}") as response:
             if response.status in [BAD_REQUEST, NOT_FOUND]:
                 raise CurrencyNotFound()
             
@@ -53,7 +56,7 @@ class ExchangeRateAPI(CoinExchange):
 
     @catch_unexpected_reponse
     async def check_health(self) -> True:
-        async with self._get("quota") as response:
+        async with self._get("/quota") as response:
             response.raise_for_status()
             response_data = await response.json()
 

@@ -1,5 +1,8 @@
-.git
-.env
-Dockerfile
 **/__pycache__
 **/*.pyc
+*.txt
+.dockerignore
+.env
+.git
+Dockerfile
+Makefile

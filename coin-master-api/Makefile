@@ -2,7 +2,11 @@
 
 .PHONY: start
 start:
-	poetry run uvicorn --reload --factory coin_master.api:create_app --host 0.0.0.0 --port 8000
+	LOG_LEVEL=DEBUG poetry run uvicorn --no-access-log --log-level critical --reload --factory coin_master.api:create_app --host 0.0.0.0 --port 8000
+
+.PHONY: start-json
+start-json:
+	JSON_LOGGING=1 poetry run uvicorn --no-access-log --log-level critical --reload --factory coin_master.api:create_app --host 0.0.0.0 --port 8000
 
 .PHONY: deps
 deps:
